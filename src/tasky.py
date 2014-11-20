@@ -179,6 +179,14 @@ def put_data():
             elif task['modified'] is DELETED:
                 service.tasks().delete(tasklist = tasklistID, task = taskID)\
                     .execute()
+                    
+def write_all_tasks(tasklistID):
+    # No task lists
+    if TaskLists == {}:
+        print 'Found no task lists.'
+        return
+    print IDToTitle[tasklistID]
+    #print(json.dumps(TaskLists, indent=4))
 
 def print_all_tasks(tasklistID):
     tab = '  '
@@ -187,10 +195,6 @@ def print_all_tasks(tasklistID):
     if TaskLists == {}:
         print 'Found no task lists.'
         return
-    
-    f = open(os.path.expanduser("~/NewTasks.txt"), "wb")
-    f.write(json.dumps(TaskLists, indent=4))
-    f.close()
 
     # print(json.dumps(TaskLists, indent=4)) TODO
 
@@ -273,6 +277,8 @@ def handle_input_args(args):
         print_summary()
         put_data()
         sys.exit(True)
+    if action is 'w':
+        write_all_tasks(tasklistID)
     if action is 'n':
         if args['rename'] is True:
             print 'Renaming task list...'
@@ -338,10 +344,6 @@ def handle_input_args(args):
         for index in args['index']:
             index = int(index)
             toggle_task(args['list'], tasklist[tasklist.keys()[index]])
-    if action is 'w':
-        print 'hey'
-        #for tasklistID in TaskLists:
-            #writeTasksToFile(tasklistID)
     if action is 'l' and args['all'] is True:
         for tasklistID in TaskLists:
             print_all_tasks(tasklistID)
