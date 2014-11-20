@@ -6,6 +6,8 @@ Author: Ajay Roopakalu (https://github.com/jrupac/tasky)
 Fork: Conner McDaniel (https://github.com/connermcd/tasky)
         - Website: connermcd.com
         - Email: connermcd using gmail
+Fork: Benjamin Frazier (https://github.com/bf4648/tasky.git)
+
 """
 
 # TODO:
@@ -18,6 +20,7 @@ from collections import OrderedDict
 from oauth2client.client import OAuth2WebServerFlow
 from oauth2client.file import Storage
 from oauth2client.tools import run
+from os.path import expanduser
 
 import datetime as dt
 import httplib2
@@ -25,7 +28,8 @@ import os
 import shlex
 import sys
 import time
-# import json # TODO
+import json
+import io
 
 tasky_dir = os.environ['HOME'] + '/.tasky'
 service = None
@@ -175,6 +179,16 @@ def put_data():
             elif task['modified'] is DELETED:
                 service.tasks().delete(tasklist = tasklistID, task = taskID)\
                     .execute()
+
+def writeTasksToFile(tasklistID):
+    	# No task lists
+    	if TaskLists == {}:
+        	print 'Found no task lists.'
+        return
+	f = io.open(os.path.expanduser("~/NewTasks.txt"), "w", encoding='utf-8') 
+	f.write(json.dumps(TaskLists, indent=4))
+	f.close()
+	print "Your tasks were printed to the following location: " 
 
 def print_all_tasks(tasklistID):
     tab = '  '
@@ -330,7 +344,9 @@ def handle_input_args(args):
         for index in args['index']:
             index = int(index)
             toggle_task(args['list'], tasklist[tasklist.keys()[index]])
-
+    elif action is 'w':
+        for tasklistID in TaskLists:
+            writeTasksToFile(tasklistID)
     if action is 'l' and args['all'] is True:
         for tasklistID in TaskLists:
             print_all_tasks(tasklistID)
@@ -398,7 +414,11 @@ def parse_arguments(args):
         parser_r = subparsers.add_parser('r')
         parser_r.add_argument('index', nargs = '*', \
             help = 'Index of the task to remove.')
-
+	
+        parser_w = subparsers.add_parser('w')
+        parser_r.add_argument('index', nargs = '*', \
+            help = 'Write tasks to a file.')	
+	
         parser_t = subparsers.add_parser('t')
         parser_t.add_argument('index', nargs = '*', \
             help = 'Index of the task to toggle.')
@@ -470,8 +490,7 @@ def main(args):
     else:
         while True:
             readIn = raw_input(\
-            "[a]dd, [c]lear, [d]elete, [e]dit, [r]emove task, [l]ist, \
-            [m]ove, [n]ew list/re[n]ame, [t]oggle, [q]uit: ")
+            "[a]dd, [c]lear, [d]elete, [e]dit, [r]emove task, [l]ist, [m]ove, [n]ew list/re[n]ame, [t]oggle, [w]rite, [q]uit: ")
             if readIn is '' or readIn is 'q':
                 break
             args = shlex.split(readIn)
