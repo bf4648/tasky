@@ -185,7 +185,10 @@ def write_all_tasks(tasklistID):
     if TaskLists == {}:
         print 'Found no task lists.'
         return
-    print IDToTitle[tasklistID]
+    json_data = json.dumps(IDToTitle[tasklistID])
+    
+    print json_data
+    #print IDToTitle[tasklistID]
     #print(json.dumps(TaskLists, indent=4))
 
 def print_all_tasks(tasklistID):
