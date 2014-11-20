@@ -180,16 +180,6 @@ def put_data():
                 service.tasks().delete(tasklist = tasklistID, task = taskID)\
                     .execute()
 
-def writeTasksToFile(tasklistID):
-    	# No task lists
-    	if TaskLists == {}:
-        	print 'Found no task lists.'
-        return
-	f = io.open(os.path.expanduser("~/NewTasks.txt"), "w", encoding='utf-8') 
-	f.write(json.dumps(TaskLists, indent=4))
-	f.close()
-	print "Your tasks were printed to the following location: " 
-
 def print_all_tasks(tasklistID):
     tab = '  '
 
@@ -197,6 +187,10 @@ def print_all_tasks(tasklistID):
     if TaskLists == {}:
         print 'Found no task lists.'
         return
+    
+    f = open(os.path.expanduser("~/NewTasks.txt"), "wb")
+    f.write(json.dumps(TaskLists, indent=4))
+    f.close()
 
     # print(json.dumps(TaskLists, indent=4)) TODO
 
@@ -345,8 +339,9 @@ def handle_input_args(args):
             index = int(index)
             toggle_task(args['list'], tasklist[tasklist.keys()[index]])
     elif action is 'w':
-        for tasklistID in TaskLists:
-            writeTasksToFile(tasklistID)
+	print "I was hit..."
+        #for tasklistID in TaskLists:
+            #writeTasksToFile(tasklistID)
     if action is 'l' and args['all'] is True:
         for tasklistID in TaskLists:
             print_all_tasks(tasklistID)
@@ -416,8 +411,6 @@ def parse_arguments(args):
             help = 'Index of the task to remove.')
 	
         parser_w = subparsers.add_parser('w')
-        parser_r.add_argument('index', nargs = '*', \
-            help = 'Write tasks to a file.')	
 	
         parser_t = subparsers.add_parser('t')
         parser_t.add_argument('index', nargs = '*', \
