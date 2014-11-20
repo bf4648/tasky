@@ -338,8 +338,8 @@ def handle_input_args(args):
         for index in args['index']:
             index = int(index)
             toggle_task(args['list'], tasklist[tasklist.keys()[index]])
-    elif action is 'w':
-	print "I was hit..."
+    if action is 'w':
+        print 'hey'
         #for tasklistID in TaskLists:
             #writeTasksToFile(tasklistID)
     if action is 'l' and args['all'] is True:
