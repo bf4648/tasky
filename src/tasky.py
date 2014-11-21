@@ -185,11 +185,11 @@ def write_all_tasks(tasklistID):
     if TaskLists == {}:
         print 'Found no task lists.'
         return
-    json_data = json.dumps(IDToTitle[tasklistID])
     
-    print json_data
-    #print IDToTitle[tasklistID]
-    #print(json.dumps(TaskLists, indent=4))
+    #Write the tasks to a file
+    f = open(os.path.expanduser("~/NewTasks.txt"), "wb")
+    f.write(json.dumps(TaskLists, indent=4))
+    f.close()
 
 def print_all_tasks(tasklistID):
     tab = '  '
@@ -270,6 +270,8 @@ def handle_input_args(args):
                 task['parent'] = int(args['parent'][0])
             print 'Adding task...'
             add_task(args['list'], task)
+    if action is 'w':
+       write_all_tasks(tasklistID)
     if action is 'd':
         readIn = raw_input('This will delete the list "' + \
             IDToTitle[tasklistID] + \
@@ -280,8 +282,6 @@ def handle_input_args(args):
         print_summary()
         put_data()
         sys.exit(True)
-    if action is 'w':
-        write_all_tasks(tasklistID)
     if action is 'n':
         if args['rename'] is True:
             print 'Renaming task list...'
@@ -414,9 +414,9 @@ def parse_arguments(args):
         parser_r = subparsers.add_parser('r')
         parser_r.add_argument('index', nargs = '*', \
             help = 'Index of the task to remove.')
-	
+    
         parser_w = subparsers.add_parser('w')
-	
+    
         parser_t = subparsers.add_parser('t')
         parser_t.add_argument('index', nargs = '*', \
             help = 'Index of the task to toggle.')
