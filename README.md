@@ -12,6 +12,8 @@ register your project with Google. The details of this process are outlined on t
 **NOTE**: The script will create a `~/.tasky/keys.txt` file that persists your API credentials
 on disk. Take care not to commit this data into any public repositories. You are responsible for securing your keys!
 
+**NOTE**: Requires Python 2.7, Google API client for Python, and Gflags. The needed packages are installable from PyPi and are in the requirements.txt file. Use pip install -r requirements.txt to install them.
+
 ## Installation
 Many [Todo.txt][todotxt] users rename the script to simply 't'. I recommend something similar; however, for clarity's sake I will refer to the script as 'tasky' for this documentation.
 
